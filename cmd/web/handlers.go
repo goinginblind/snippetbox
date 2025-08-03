@@ -19,27 +19,9 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, s := range snippets {
-		fmt.Fprintf(w, "+%v\n", s)
-	}
-
-	//files := []string{
-	//	"./ui/html/base.tmpl",
-	//	"./ui/html/partials/nav.tmpl",
-	//	"./ui/html/pages/home.tmpl",
-	//}
-	//
-	//ts, err := template.ParseFiles(files...)
-	//if err != nil {
-	//	app.serverError(w, r, err)
-	//	return
-	//}
-	//
-	//err = ts.ExecuteTemplate(w, "base", nil)
-	//if err != nil {
-	//	app.serverError(w, r, err)
-	//	return
-	//}
+	app.render(w, r, http.StatusOK, "home.tmpl", templateData{
+		Snippets: snippets,
+	})
 }
 
 // Provides a page with a specific snippet
@@ -60,7 +42,9 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "%+v", snippet)
+	app.render(w, r, http.StatusOK, "view.tmpl", templateData{
+		Snippet: snippet,
+	})
 }
 
 // Provides a page with a snippet creation page: a GET request must be sent
