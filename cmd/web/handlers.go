@@ -9,7 +9,7 @@ import (
 	"github.com/goinginblind/snippetbox/internal/models"
 )
 
-// Home page handler
+// home serves the home page
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	snippets, err := app.snippets.Latest()
 	if err != nil {
@@ -23,7 +23,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, http.StatusOK, "home.tmpl", data)
 }
 
-// Provides a page with a specific snippet
+// snippetView serves a page with a specific snippet
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil || id < 1 {
@@ -47,12 +47,12 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, http.StatusOK, "view.tmpl", data)
 }
 
-// Provides a page with a snippet creation page: a GET request must be sent
+// snippetCreate serves a page with a snippet creation page: a GET request must be sent
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Display a form for creating a new snippet..."))
 }
 
-// Creates a snippet: a POST request must be sent
+// snippetCreatePost creates a snippet: a POST request must be sent
 func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) {
 	title := "O snail"
 	content := "O snail\nClimb Mount Fuji,\nBut slowly, slowly!\n\n\t-Kabayashi Issa"
