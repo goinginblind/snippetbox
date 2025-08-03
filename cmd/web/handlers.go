@@ -52,10 +52,12 @@ func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Display a form for creating a new snippet..."))
 }
 
-// snippetCreatePost creates a snippet: a POST request must be sent
+// snippetCreatePost creates a snippet: a POST request must be sent.
+//
+// As of now it posts a placeholder to check the database functionality.
 func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) {
 	title := "O snail"
-	content := "O snail\nClimb Mount Fuji,\nBut slowly, slowly!\n\n\t-Kabayashi Issa"
+	content := "O snail\nClimb Mount Fuji,\nBut slowly, slowly!\n\n-Kabayashi Issa"
 	expires := 7
 
 	id, err := app.snippets.Insert(title, content, expires)

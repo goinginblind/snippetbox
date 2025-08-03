@@ -1,6 +1,10 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/justinas/alice"
+)
 
 // The routes() method returns a handler wrapper for all the other handlers
 func (app *application) routes() http.Handler {
@@ -14,5 +18,9 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("GET /snippet/create", app.snippetCreate)
 	mux.HandleFunc("POST /snippet/create", app.snippetCreatePost)
 
-	return app.recoverPanic(app.logRequest(commonHeaders(mux)))
+	// standard var will be a chain of middleware, that wraps around the 'mux'
+	standard := alice.New(app.recoverPanic, app.logRequest, commonHeaders)
+
+	// end up the wrap around and return the whole chain
+	return standard.Then(mux)
 }
