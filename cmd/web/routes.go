@@ -2,8 +2,8 @@ package main
 
 import "net/http"
 
-// The routes() method returns a servemux containing all the application routes.
-func (app *application) routes() *http.ServeMux {
+// The routes() method returns a handler wrapper for all the other handlers
+func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
@@ -14,5 +14,5 @@ func (app *application) routes() *http.ServeMux {
 	mux.HandleFunc("GET /snippet/create", app.snippetCreate)
 	mux.HandleFunc("POST /snippet/create", app.snippetCreatePost)
 
-	return mux
+	return app.logRequest(commonHeaders(mux))
 }
