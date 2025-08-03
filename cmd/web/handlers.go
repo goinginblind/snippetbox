@@ -37,7 +37,7 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	msg := fmt.Sprintf("Display a specific snippet with ID %d...", id)
+	msg := fmt.Sprintf("Display a specific snippet with ID %d...\n", id)
 	w.Write([]byte(msg))
 }
 
@@ -48,6 +48,15 @@ func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 
 // Creates a snippet: a POST request must be sent
 func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Save a new snippet..."))
+	title := "O snail"
+	content := "O snail\nClimb Mount Fuji,\nBut slowly, slowly!\n\n\t-Kabayashi Issa"
+	expires := 7
+
+	id, err := app.snippets.Insert(title, content, expires)
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/snippet/view/%d", id), http.StatusSeeOther)
 }
