@@ -5,6 +5,15 @@ import (
 	"net/http"
 )
 
+// commonHeaders is a handler wrapper, whcih adds the common headers, mostly related to the privacy policy.
+//
+// How it is implemented:
+//
+//	w.Header().Set("Referrer-Policy", "origin-when-cross-origin")
+//	w.Header().Set("X-Content-Type-Options", "nosniff")
+//	w.Header().Set("X-Frame-Options", "deny")
+//	w.Header().Set("X-XSS-Protection", "0")
+//	w.Header().Set("Server", "Go")
 func commonHeaders(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set(
@@ -22,6 +31,9 @@ func commonHeaders(next http.Handler) http.Handler {
 	})
 }
 
+// logRequest uses the app's logger to log request info.
+//
+// logs ips, protos, methods and uris, writes them as an Info.
 func (app *application) logRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var (
