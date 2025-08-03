@@ -1,10 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
+
+	"github.com/goinginblind/snippetbox/internal/models"
 )
 
 // Home page handler
@@ -37,8 +40,18 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	msg := fmt.Sprintf("Display a specific snippet with ID %d...\n", id)
-	w.Write([]byte(msg))
+
+	snippet, err := app.snippets.Get(id)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			http.NotFound(w, r)
+		} else {
+			app.serverError(w, r, err)
+		}
+		return
+	}
+
+	fmt.Fprintf(w, "%+v", snippet)
 }
 
 // Provides a page with a snippet creation page: a GET request must be sent
