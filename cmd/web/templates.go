@@ -17,6 +17,7 @@ type templateData struct {
 	Snippet     models.Snippet
 	Snippets    []models.Snippet
 	Form        any
+	Flash       string
 }
 
 // Create a human friendly representation of date time, which is a nicely
