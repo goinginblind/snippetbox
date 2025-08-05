@@ -1,2 +1,4 @@
 .env
 tls/
+# that's my executable name
+myapp
