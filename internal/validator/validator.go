@@ -14,12 +14,18 @@ var EmailRX = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](
 // Define a new Validator struct which contains a map of validation error messages
 // for our form fields
 type Validator struct {
+	// FieldErrors holds a specific field name as a map key,
+	// and a message to be displayed for the user as value.
 	FieldErrors map[string]string
+	// NonFieldErrors holds errors that are not specific for
+	// specific fields, i.e. an incorrect email-password
+	// combination
+	NonFieldErrors []string
 }
 
 // Valid() returns true if the FieldErrors map doesn't contain any entries
 func (v *Validator) Valid() bool {
-	return len(v.FieldErrors) == 0
+	return len(v.FieldErrors) == 0 && len(v.NonFieldErrors) == 0
 }
 
 // AddFieldError() adds an error message to the FieldErrors map (so long as no
@@ -32,6 +38,12 @@ func (v *Validator) AddFieldError(key, message string) {
 	if _, ok := v.FieldErrors[key]; !ok {
 		v.FieldErrors[key] = message
 	}
+}
+
+// AddNonFieldError() adds an error message to the NonFiledErrors slice
+// of strings with a given message.
+func (v *Validator) AddNonFieldError(message string) {
+	v.NonFieldErrors = append(v.NonFieldErrors, message)
 }
 
 // CheckField() adds an error message to the FieldErrors map only if a
