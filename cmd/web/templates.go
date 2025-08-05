@@ -19,6 +19,7 @@ type templateData struct {
 	Form            any
 	Flash           string
 	IsAuthenticated bool
+	CSRFToken       string
 }
 
 // Create a human friendly representation of date time, which is a nicely
