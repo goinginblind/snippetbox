@@ -1,10 +1,15 @@
 package validator
 
 import (
+	"regexp"
 	"slices"
 	"strings"
 	"unicode/utf8"
 )
+
+// EmailRX stores regular expression for email sanity checks.
+// It's defined in the validator package to save perfomance: compiled only once.
+var EmailRX = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
 // Define a new Validator struct which contains a map of validation error messages
 // for our form fields
@@ -42,13 +47,24 @@ func NotBlank(s string) bool {
 	return strings.TrimSpace(s) != ""
 }
 
-// MaxChars() returns true if a value contains no more than n characters.
+// MaxChars() returns true if a value contains no more (<=) than n characters.
 func MaxChars(s string, n int) bool {
 	return utf8.RuneCountInString(s) <= n
+}
+
+// MinChars() returns true if a value contains no less (>=) than n characters.
+func MinChars(s string, n int) bool {
+	return utf8.RuneCountInString(s) >= n
 }
 
 // PermittedValue() returns true if a value is in a list of specific permitted
 // values.
 func PermittedValue[T comparable](value T, permittedValues ...T) bool {
 	return slices.Contains(permittedValues, value)
+}
+
+// Matches() returns true if a value matches a provided compiled regular
+// expression pattern.
+func Matches(s string, rx *regexp.Regexp) bool {
+	return rx.MatchString(s)
 }
