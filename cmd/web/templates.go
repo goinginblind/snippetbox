@@ -27,7 +27,11 @@ type templateData struct {
 // Create a human friendly representation of date time, which is a nicely
 // formatted string in a format such as "02 Jan 2006 at 15:04"
 func humanDate(t time.Time) string {
-	return t.Format("02 Jan 2006 at 15:04")
+	if t.IsZero() {
+		return ""
+	}
+
+	return t.UTC().Format("02 Jan 2006 at 15:04")
 }
 
 // Initialize a template.FuncMap object and store it in a global variable. This is
